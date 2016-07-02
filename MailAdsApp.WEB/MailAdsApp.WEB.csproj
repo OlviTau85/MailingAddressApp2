@@ -157,7 +157,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\FilterInfo.cs" />
+    <Compile Include="Models\MailAddress.cs" />
     <Compile Include="Models\MailAddressViewModel.cs" />
+    <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\NinjectDependencyResolver.cs" />
   </ItemGroup>
@@ -189,13 +192,13 @@
     <Content Include="Content\Css\Bootstrap\modules\timepicker.min.css" />
     <Content Include="Content\Css\Bootstrap\modules\tooltip.css" />
     <Content Include="Content\Css\Bootstrap\modules\tooltip.min.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\Css\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Css\site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\Css\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\Css\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\Css\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\Css\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Css\Bootstrap\bootstrap-theme.min.css.map" />
     <Content Include="Content\Css\Bootstrap\bootstrap-theme.css.map" />
     <Content Include="Content\Css\Bootstrap\bootstrap.min.css.map" />

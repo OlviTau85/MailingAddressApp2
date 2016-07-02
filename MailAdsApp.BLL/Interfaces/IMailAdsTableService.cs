@@ -1,4 +1,5 @@
 ﻿using MailAdsApp.BLL.DTO;
+using MailAdsApp.BLL.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,12 @@ namespace MailAdsApp.BLL.Interfaces
 {
     public interface IMailAdsTableService
     {
+        FilterInfo Filter { get; set; }
+
+
         IEnumerable<MailAddressDTO> GetMailAddresses();
+
         void Dispose();
+
     }
 }

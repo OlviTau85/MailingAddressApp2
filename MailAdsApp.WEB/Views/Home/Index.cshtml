@@ -21,39 +21,39 @@
                     <tr>
                         <th>№</th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('Country')">
+                            <a href="" class="btn" ng-click="sortData.sort('Country')">
                                 <span ng-bind="translation.CAPTION_COUNTRY"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('Country'), 'glyphicon-chevron-down' : isSortDown('Country')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('Country'), 'glyphicon-chevron-down' : sortData.isSortDown('Country')}"></i>
                             </a>
                         </th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('City')">
+                            <a href="" class="btn" ng-click="sortData.sort('City')">
                                 <span ng-bind="translation.CAPTION_CITY"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('City'), 'glyphicon-chevron-down' : isSortDown('City')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('City'), 'glyphicon-chevron-down' : sortData.isSortDown('City')}"></i>
                             </a>
                         </th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('Street')">
+                            <a href="" class="btn" ng-click="sortData.sort('Street')">
                                 <span ng-bind="translation.CAPTION_STREET"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('Street'), 'glyphicon-chevron-down' : isSortDown('Street')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('Street'), 'glyphicon-chevron-down' : sortData.isSortDown('Street')}"></i>
                             </a>
                         </th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('HouseNumber')">
+                            <a href="" class="btn" ng-click="sortData.sort('HouseNumber')">
                                 <span ng-bind="translation.CAPTION_HN"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('HouseNumber'), 'glyphicon-chevron-down' : isSortDown('HouseNumber')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('HouseNumber'), 'glyphicon-chevron-down' : sortData.isSortDown('HouseNumber')}"></i>
                             </a>
                         </th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('Index')">
+                            <a href="" class="btn" ng-click="sortData.sort('Index')">
                                 <span ng-bind="translation.CAPTION_INDEX"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('Index'), 'glyphicon-chevron-down' : isSortDown('Index')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('Index'), 'glyphicon-chevron-down' : sortData.isSortDown('Index')}"></i>
                             </a>
                         </th>
                         <th>
-                            <a href="" class="btn" ng-click="sort('CreationDate')">
+                            <a href="" class="btn" ng-click="sortData.sort('CreationDate')">
                                 <span ng-bind="translation.CAPTION_DATE"></span>
-                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : isSortUp('CreationDate'),'glyphicon-chevron-down' : isSortDown('CreationDate')}"></i>
+                                <i class="glyphicon" ng-class="{'glyphicon-chevron-up' : sortData.isSortUp('CreationDate'),'glyphicon-chevron-down' : sortData.isSortDown('CreationDate')}"></i>
                             </a>
                         </th>
                     </tr>
@@ -76,31 +76,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="address in pageData">
+                    <tr ng-repeat="address in mailAddressesList">
                         <th scope="row" ng-bind="(paginationData.currentPage - 1) * paginationData.itemsPerPage + $index + 1"></th>
-                        <td ng-bind="address.Country" ng-class="{'text-info':isSortUp('Country')||isSortDown('Country')||countryFilter}"></td>
-                        <td ng-bind="address.City" ng-class="{'text-info':isSortUp('City')||isSortDown('City')||cityFilter}"></td>
-                        <td ng-bind="address.Street" ng-class="{'text-info':isSortUp('Street')||isSortDown('Street')||streetFilter}"></td>
-                        <td ng-bind="address.HouseNumber" ng-class="{'text-info':isSortUp('HouseNumber')||isSortDown('HouseNumber')||rangeData.isFiltred()}"></td>
-                        <td ng-bind="address.Index" ng-class="{'text-info':isSortUp('Index')||isSortDown('Index')||indexFilter}"></td>
-                        <td ng-bind="address.CreationDate.slice(6, -2) | date:'dd.MM.yyyy HH:mm'" ng-class="{'text-info':isSortUp('CreationDate')||isSortDown('CreationDate')||creationDateFilterData}"></td>
+                        <td ng-bind="address.Country"></td>
+                        <td ng-bind="address.City"></td>
+                        <td ng-bind="address.Street"></td>
+                        <td ng-bind="address.HouseNumber"></td>
+                        <td ng-bind="address.Index"></td>
+                        <td ng-bind="address.CreationDate.slice(6, -2) | date:'dd.MM.yyyy HH:mm'"></td>
                     </tr>
                 </tbody>
             </table>
             <div class="panel-body">
                 <div class="row">
-                    <section>
+                    <!--<section>
                         <select ng-change="paginationData.onPageChange()" ng-model="paginationData.itemsPerPage">
                             <option selected value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                    </section>
+                    </section>-->
                     <div class="col-lg-offset-3 col-lg-6 center">
                         <uib-pagination total-items="paginationData.totalItems" items-per-page="paginationData.itemsPerPage" ng-model="paginationData.currentPage" ng-change="paginationData.onPageChange()" max-size="paginationData.maxSize" class="pagination-sm" boundary-link-numbers="true" previous-text="<" next-text=">"></uib-pagination>
                     </div>
-                    <label class="control-label col-lg-3 label-info"><span ng-bind="translation.PASS"></span>:<span ng-bind="filteredData.length"></span> <span ng-bind="translation.FROM"></span> <span ng-bind="mailAddressesList.length"></span> </label>
+                    <label class="control-label col-lg-3 label-info"><span ng-bind="translation.PASS"></span>:<span ng-bind="paginationData.totalItems"></span> <span ng-bind="translation.FROM"></span> <span ng-bind="total"></span> </label>
                 </div>
             </div>
         </div>

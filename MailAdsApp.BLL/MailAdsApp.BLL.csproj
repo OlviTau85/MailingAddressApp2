@@ -48,7 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\MailAddressDTO.cs" />
+    <Compile Include="Infrastructure\FilterInfo.cs" />
+    <Compile Include="Infrastructure\OrderHelper.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />
+    <Compile Include="Infrastructure\TestAssignable.cs" />
     <Compile Include="Interfaces\IMailAdsTableService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MailAdsTableService.cs" />
