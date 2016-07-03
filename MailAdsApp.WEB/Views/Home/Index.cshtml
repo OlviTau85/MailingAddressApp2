@@ -1,4 +1,7 @@
-﻿@{
+﻿@model PagedList.IPagedList<MailAdsApp.WEB.Models.MailAddress>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
     ViewBag.Title = "MailingAddressApp";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -76,15 +79,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="address in mailAddressesList">
-                        <th scope="row" ng-bind="(paginationData.currentPage - 1) * paginationData.itemsPerPage + $index + 1"></th>
-                        <td ng-bind="address.Country"></td>
-                        <td ng-bind="address.City"></td>
-                        <td ng-bind="address.Street"></td>
-                        <td ng-bind="address.HouseNumber"></td>
-                        <td ng-bind="address.Index"></td>
-                        <td ng-bind="address.CreationDate.slice(6, -2) | date:'dd.MM.yyyy HH:mm'"></td>
+                    @foreach (var item in Model) { 
+                    <tr>
+                        <th scope="row"></th>
+                        <td>@item.Country</td>
+                        <td>@item.City</td>
+                        <td>@item.Street</td>
+                        <td>@item.HouseNumber</td>
+                        <td>@item.Index</td>
+                        <td>@item.CreationDate</td>
                     </tr>
+                    }
                 </tbody>
             </table>
             <div class="panel-body">
@@ -98,7 +103,7 @@
                         </select>
                     </section>-->
                     <div class="col-lg-offset-3 col-lg-6 center">
-                        <uib-pagination total-items="paginationData.totalItems" items-per-page="paginationData.itemsPerPage" ng-model="paginationData.currentPage" ng-change="paginationData.onPageChange()" max-size="paginationData.maxSize" class="pagination-sm" boundary-link-numbers="true" previous-text="<" next-text=">"></uib-pagination>
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
                     </div>
                     <label class="control-label col-lg-3 label-info"><span ng-bind="translation.PASS"></span>:<span ng-bind="paginationData.totalItems"></span> <span ng-bind="translation.FROM"></span> <span ng-bind="total"></span> </label>
                 </div>
