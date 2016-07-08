@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MailAdsApp.WEB.Models
 {
+    /// <summary>
+    /// MailAddress Model
+    /// </summary>
     public class MailAddress
     {
         public int Id { get; set; }

@@ -11,6 +11,9 @@ using System.Web.Mvc;
 
 namespace MailAdsApp.WEB.Controllers
 {
+    /// <summary>
+    /// DataController as simple API
+    /// </summary>
     public class DataController : Controller
     {
         IMailAdsTableService mailAdsTableService;
@@ -22,12 +25,18 @@ namespace MailAdsApp.WEB.Controllers
         //
         // GET: /Data/
 
+        /// <summary>
+        /// POST action for create page with table of mailaddress data? filtered and sorted
+        /// </summary>
+        /// <param name="pageInfo">PageInfo settings</param>
+        /// <returns>model consists of prepared list of mail addreses and some page info</returns>
         [HttpPost]
         public JsonResult GetData(PageInfo pageInfo)
         {
             IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
             MailAddressViewModel model = new MailAddressViewModel();
             model.PageInfo = pageInfo;
+            // setup filters
             mailAdsTableService.Filter.CountryFilter = model.PageInfo.CountryFilter;
             mailAdsTableService.Filter.CityFilter = model.PageInfo.CityFilter;
             mailAdsTableService.Filter.StreetFilter = model.PageInfo.StreetFilter;
@@ -37,6 +46,7 @@ namespace MailAdsApp.WEB.Controllers
             mailAdsTableService.Filter.FromCreationDate = model.PageInfo.FromCreationDate;
             mailAdsTableService.Filter.UntilCreationDate = model.PageInfo.UntilCreationDate;
             model.MailAddressesList = Mapper.Map<IEnumerable<MailAddressDTO>, List<MailAddress>>(mailAdsTableService.GetMailAddresses());
+            // and check up ordering
             switch (model.PageInfo.OrderField)
             {
                 case "Country":
@@ -58,11 +68,18 @@ namespace MailAdsApp.WEB.Controllers
                     model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.CreationDate) : model.MailAddressesList.OrderBy(key => key.CreationDate);
                     break;
             }
+            //update page info
             model.PageInfo.TotalItems = model.MailAddressesList.Count();
+            // make pagination
             model.MailAddressesList = model.MailAddressesList.Skip((model.PageInfo.PageNumber - 1) * model.PageInfo.PageSize).Take(model.PageInfo.PageSize);
+            // returns result model
             return new JsonResult { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
+        /// <summary>
+        /// Initialize page with start page data
+        /// </summary>
+        /// <returns>data for setup page filter boundaries</returns>
         [HttpGet]
         public JsonResult Init()
         {

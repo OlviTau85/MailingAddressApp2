@@ -157,7 +157,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\FilterInfo.cs" />
     <Compile Include="Models\MailAddress.cs" />
     <Compile Include="Models\MailAddressViewModel.cs" />
     <Compile Include="Models\PageInfo.cs" />

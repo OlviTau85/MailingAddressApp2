@@ -7,11 +7,17 @@ using System.Web.Mvc;
 
 namespace MailAdsApp.WEB.Controllers
 {
+    /// <summary>
+    /// HomeController
+    /// </summary>
     public class HomeController : Controller
     {
         //
         // GET: /Home/
 
+        /// <summary>
+        /// Action Index
+        /// </summary>
         public ActionResult Index()
         {
             return View();

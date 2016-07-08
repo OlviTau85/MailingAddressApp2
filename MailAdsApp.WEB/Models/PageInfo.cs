@@ -5,6 +5,9 @@ using System.Web;
 
 namespace MailAdsApp.WEB.Models
 {
+    /// <summary>
+    /// Page info settings for MailAddressViewModel
+    /// </summary>
     public class PageInfo
     {
         public int PageNumber { get; set; }
