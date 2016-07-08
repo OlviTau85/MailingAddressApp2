@@ -78,25 +78,25 @@
                 <tbody>
                     <tr ng-repeat="address in mailAddressesList">
                         <th scope="row" ng-bind="(paginationData.currentPage - 1) * paginationData.itemsPerPage + $index + 1"></th>
-                        <td ng-bind="address.Country"></td>
-                        <td ng-bind="address.City"></td>
-                        <td ng-bind="address.Street"></td>
-                        <td ng-bind="address.HouseNumber"></td>
-                        <td ng-bind="address.Index"></td>
-                        <td ng-bind="address.CreationDate.slice(6, -2) | date:'dd.MM.yyyy HH:mm'"></td>
+                        <td ng-bind="address.Country" ng-class="{'text-info':sortData.isSortUp('Country')||sortData.isSortDown('Country')||countryFilter}"></td>
+                        <td ng-bind="address.City" ng-class="{'text-info':sortData.isSortUp('City')||sortData.isSortDown('City')||cityFilter}"></td>
+                        <td ng-bind="address.Street" ng-class="{'text-info':sortData.isSortUp('Street')||sortData.isSortDown('Street')||streetFilter}"></td>
+                        <td ng-bind="address.HouseNumber" ng-class="{'text-info':sortData.isSortUp('HouseNumber')||sortData.isSortDown('HouseNumber')||rangeData.isFiltred()}"></td>
+                        <td ng-bind="address.Index" ng-class="{'text-info':sortData.isSortUp('Index')||sortData.isSortDown('Index')||indexFilter}"></td>
+                        <td ng-bind="address.CreationDate.slice(6, -2) | date:'dd.MM.yyyy HH:mm'" ng-class="{'text-info':sortData.isSortUp('CreationDate')||sortData.isSortDown('CreationDate')||creationDateFilterData}"></td>
                     </tr>
                 </tbody>
             </table>
             <div class="panel-body">
                 <div class="row">
-                    <!--<section>
+                    <section>
                         <select ng-change="paginationData.onPageChange()" ng-model="paginationData.itemsPerPage">
                             <option selected value="10">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                    </section>-->
+                    </section>
                     <div class="col-lg-offset-3 col-lg-6 center">
                         <uib-pagination total-items="paginationData.totalItems" items-per-page="paginationData.itemsPerPage" ng-model="paginationData.currentPage" ng-change="paginationData.onPageChange()" max-size="paginationData.maxSize" class="pagination-sm" boundary-link-numbers="true" previous-text="<" next-text=">"></uib-pagination>
                     </div>

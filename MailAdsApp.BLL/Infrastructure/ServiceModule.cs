@@ -9,6 +9,9 @@ using Ninject.Modules;
 
 namespace MailAdsApp.BLL.Infrastructure
 {
+    /// <summary>
+    /// Class for initialaze dependency injection into services
+    /// </summary>
     public class ServiceModule: NinjectModule
     {
         private string connectionString;
@@ -17,6 +20,9 @@ namespace MailAdsApp.BLL.Infrastructure
         {
             connectionString = connection;
         }
+        /// <summary>
+        /// Loads all bindings for project
+        /// </summary>
         public override void Load()
         {
             Bind<IUnitOfWork>().To<UnitOfWork>().WithConstructorArgument(connectionString);

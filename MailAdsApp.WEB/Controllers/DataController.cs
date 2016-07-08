@@ -14,12 +14,9 @@ namespace MailAdsApp.WEB.Controllers
     public class DataController : Controller
     {
         IMailAdsTableService mailAdsTableService;
-        MailAddressViewModel model;
         public DataController(IMailAdsTableService serv)
         {
             mailAdsTableService = serv;
-            model = new MailAddressViewModel();
-            model.PageInfo = new PageInfo();
         }
 
         //
@@ -29,8 +26,38 @@ namespace MailAdsApp.WEB.Controllers
         public JsonResult GetData(PageInfo pageInfo)
         {
             IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
+            MailAddressViewModel model = new MailAddressViewModel();
             model.PageInfo = pageInfo;
+            mailAdsTableService.Filter.CountryFilter = model.PageInfo.CountryFilter;
+            mailAdsTableService.Filter.CityFilter = model.PageInfo.CityFilter;
+            mailAdsTableService.Filter.StreetFilter = model.PageInfo.StreetFilter;
+            mailAdsTableService.Filter.IndexFilter = model.PageInfo.IndexFilter;
+            mailAdsTableService.Filter.FromHouseNumberFilter = model.PageInfo.FromHouseNumberFilter;
+            mailAdsTableService.Filter.UntilHouseNumberFilter = model.PageInfo.UntilHouseNumberFilter;
+            mailAdsTableService.Filter.FromCreationDate = model.PageInfo.FromCreationDate;
+            mailAdsTableService.Filter.UntilCreationDate = model.PageInfo.UntilCreationDate;
             model.MailAddressesList = Mapper.Map<IEnumerable<MailAddressDTO>, List<MailAddress>>(mailAdsTableService.GetMailAddresses());
+            switch (model.PageInfo.OrderField)
+            {
+                case "Country":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Country) : model.MailAddressesList.OrderBy(key => key.Country);
+                    break;
+                case "City":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.City) : model.MailAddressesList.OrderBy(key => key.City);
+                    break;
+                case "Street":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Street) : model.MailAddressesList.OrderBy(key => key.Street);
+                    break;
+                case "Index":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Index) : model.MailAddressesList.OrderBy(key => key.Index);
+                    break;
+                case "HouseNumber":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.HouseNumber) : model.MailAddressesList.OrderBy(key => key.HouseNumber);
+                    break;
+                case "CreationDate":
+                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.CreationDate) : model.MailAddressesList.OrderBy(key => key.CreationDate);
+                    break;
+            }
             model.PageInfo.TotalItems = model.MailAddressesList.Count();
             model.MailAddressesList = model.MailAddressesList.Skip((model.PageInfo.PageNumber - 1) * model.PageInfo.PageSize).Take(model.PageInfo.PageSize);
             return new JsonResult { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
@@ -39,38 +66,15 @@ namespace MailAdsApp.WEB.Controllers
         [HttpGet]
         public JsonResult Init()
         {
-            long count = mailAdsTableService.GetMailAddresses().Count();
             var filterData = new
             {
                 mailAdsTableService.Filter.MinHouseNumberFilter,
                 mailAdsTableService.Filter.MaxHouseNumberFilter,
                 mailAdsTableService.Filter.MaxCreationDate,
                 mailAdsTableService.Filter.MinCreationDate,
-                count
+                count = mailAdsTableService.GetMailAddresses().Count()
             };
             return new JsonResult { Data = filterData, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-
-        [HttpPost]
-        public JsonResult FilterData(MailAdsApp.WEB.Models.FilterInfo filterInfo)
-        {
-            IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
-            mailAdsTableService.Filter.CountryFilter = filterInfo.CountryFilter;
-            mailAdsTableService.Filter.CityFilter = filterInfo.CityFilter;
-            mailAdsTableService.Filter.StreetFilter = filterInfo.StreetFilter;
-            mailAdsTableService.Filter.IndexFilter = filterInfo.IndexFilter;
-            mailAdsTableService.Filter.FromHouseNumberFilter = filterInfo.FromHouseNumberFilter;
-            mailAdsTableService.Filter.UntilHouseNumberFilter = filterInfo.UntilHouseNumberFilter;
-            mailAdsTableService.Filter.FromCreationDate = filterInfo.FromCreationDate;
-            mailAdsTableService.Filter.UntilCreationDate = filterInfo.UntilCreationDate;
-
-            model.PageInfo.PageSize = 10;
-            model.MailAddressesList = Mapper.Map<IEnumerable<MailAddressDTO>, List<MailAddress>>(mailAdsTableService.GetMailAddresses());
-            
-            model.PageInfo.TotalItems = model.MailAddressesList.Count();
-            model.MailAddressesList = model.MailAddressesList.Skip((model.PageInfo.PageNumber - 1) * model.PageInfo.PageSize).Take(model.PageInfo.PageSize);
-            return new JsonResult { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-
     }
 }

@@ -9,6 +9,9 @@ using System.Web.Mvc;
 
 namespace MailAdsApp.WEB.Util
 {
+    /// <summary>
+    /// Class for ninject dependency setup
+    /// </summary>
     public class NinjectDependencyResolver: IDependencyResolver
     {
         private IKernel kernel;

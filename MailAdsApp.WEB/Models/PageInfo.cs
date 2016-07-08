@@ -12,6 +12,14 @@ namespace MailAdsApp.WEB.Models
         public int TotalItems { get; set; }
         public string OrderField { get; set; }
         public bool SortReverse { get; set; }
+        public string CountryFilter { get; set; }
+        public string CityFilter { get; set; }
+        public string StreetFilter { get; set; }
+        public int FromHouseNumberFilter { get; set; }
+        public int UntilHouseNumberFilter { get; set; }
+        public string IndexFilter { get; set; }
+        public DateTime FromCreationDate { get; set; }
+        public DateTime UntilCreationDate { get; set; }
         public int TotalPages
         {
             get { return (int)Math.Ceiling((decimal)TotalItems / PageSize); }

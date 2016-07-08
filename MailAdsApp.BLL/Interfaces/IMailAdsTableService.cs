@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace MailAdsApp.BLL.Interfaces
 {
+    /// <summary>
+    /// Interface for project services
+    /// </summary>
     public interface IMailAdsTableService
     {
         FilterInfo Filter { get; set; }
-
 
         IEnumerable<MailAddressDTO> GetMailAddresses();
 

@@ -3,40 +3,42 @@
  **/
 
 angular.module("MailingAddressApp").controller('MailAdsListCtrl',
-['$scope', 'MailAdsListModel', 'orderByFilter', 'mailAddressListFilterFilter', 'filterFilter', 'translationService', MailAdsListCtrl])
+['$scope', 'MailAdsListModel', 'orderByFilter', 'filterFilter', 'translationService', MailAdsListCtrl])
 .factory('MailAdsListModel', MailAdsListModel)
-.filter('mailAddressListFilter', mailAddressListFilter)
 .filter('dateRangeFilter', ['dateFilter', dateRangeFilter])
 .service('translationService', translationService);
 
 /* Main controller */
-function MailAdsListCtrl($scope, MailAdsListModel, orderBy, mailAddressListFilter, filter, translationService) {
+function MailAdsListCtrl($scope, MailAdsListModel, orderBy, filter, translationService) {
     
-    $scope.mailAddressesList = null;  // unsorted and non filtered list of addresses
-    $scope.total = 0;
+    $scope.mailAddressesList = null;  // list of addresses to show
+    $scope.total = 0;                 // total number of records on server in data base
 
-    MailAdsListModel.init().then(function (data) {
-        //console.log(data.data);
+    /* First initialization of page interface */
+    MailAdsListModel.init().then(function (data) {      // get initialaze info for page from server
         $scope.total = data.data.count;
         $scope.rangeData.min = $scope.rangeData.valueFrom = data.data.MinHouseNumberFilter;
         $scope.rangeData.max = $scope.rangeData.valueUntil = data.data.MaxHouseNumberFilter;
-        $scope.creationDateFilterData.dateFrom = $scope.creationDateFilterData.minDate = data.data.MinCreationDate.slice(6, -2);
-        $scope.creationDateFilterData.dateUntil = $scope.creationDateFilterData.maxDate = data.data.MaxCreationDate.slice(6, -2);
-        getMailAddressList();
+        $scope.creationDateFilterData.minDate = data.data.MinCreationDate.slice(6, -2);
+        $scope.creationDateFilterData.maxDate = data.data.MaxCreationDate.slice(6, -2);
+        $scope.creationDateFilterData.reset();
+        getMailAddressList();                           // and load first data for first page
     }, function (error) {
-        alert("Error! Can't init app! " + error.status);
+        alert("Error! Can't init app! Code=" + error.status);   // else alert with error code
     });
 
-
+    /* Function for get next page with filtered and sorted data */
     getMailAddressList = function () {
-        MailAdsListModel.getMailAddressesList($scope.paginationData.currentPage, $scope.paginationData.itemsPerPage, $scope.totalItems, $scope.sortField, $scope.reverse).then(function (data) {  // download next page of data
+        MailAdsListModel.getMailAddressesList($scope.paginationData.currentPage, $scope.paginationData.itemsPerPage, $scope.totalItems, $scope.sortData.sortField, $scope.sortData.reverse,
+                                              $scope.countryFilter, $scope.cityFilter, $scope.streetFilter, $scope.rangeData.valueFrom, $scope.rangeData.valueUntil,
+                                              $scope.indexFilter, $scope.creationDateFilterData.dateFrom, $scope.creationDateFilterData.dateUntil).then(function (data) {
+            // update page info with new conditions
             $scope.mailAddressesList = data.data.MailAddressesList;
             $scope.paginationData.currentPage = data.data.PageInfo.PageNumber;
             $scope.paginationData.itemsPerPage = data.data.PageInfo.PageSize;
             $scope.paginationData.totalItems = data.data.PageInfo.TotalItems;
             $scope.sortData.sortField = data.data.PageInfo.OrderField;
             $scope.sortData.reverse = data.data.PageInfo.SortReverse;
-            //console.log(data.data.PageInfo);
         }, function (error) {
             alert("Error! Can't get mail address list data! " + error.status);
         });
@@ -48,57 +50,15 @@ function MailAdsListCtrl($scope, MailAdsListModel, orderBy, mailAddressListFilte
         $scope.selectedLanguage = $scope.radioModel;
         translationService.getTranslation($scope, $scope.selectedLanguage);
     };
-    $scope.radioModel = 'ru';
+    $scope.radioModel = 'ru';  // current language is russian
     $scope.translate();
-
-
-    /* Set bounderies of date and numeric range components by min and max values of all records */
-    function SetBounders() {
-        var max = $scope.mailAddressesList[0].HouseNumber;
-        var min = $scope.mailAddressesList[0].HouseNumber;
-        var minDate = $scope.mailAddressesList[0].CreationDate;
-        $scope.mailAddressesList.forEach(function (item) {
-            if (item.HouseNumber > max) {
-                max = item.HouseNumber;
-            }
-            if (item.HouseNumber < min) {
-                min = item.HouseNumber;
-            }
-            if (item.CreationDate.slice(6, -2) < minDate.slice(6, -2)) {
-                minDate = item.CreationDate;
-            }
-        });
-        $scope.rangeData.min = $scope.rangeData.valueFrom = min;
-        $scope.rangeData.max = $scope.rangeData.valueUntil = max;
-        $scope.creationDateFilterData.dateFrom = $scope.creationDateFilterData.minDate = minDate.slice(6, -2);
-        $scope.creationDateFilterData.dateUntil = new Date();
-    };
     
     /* Calls when any filter input changed */
     $scope.onFilterChange = function () {
-        MailAdsListModel.filterMailAddressesList($scope.countryFilter, $scope.cityFilter, $scope.streetFilter, $scope.rangeData.valueFrom,
-                                                 $scope.rangeData.valueUntil, $scope.rangeData.min, $scope.rangeData.max, $scope.indexFilter,
-                                                 $scope.creationDateFilterData.dateFrom, $scope.creationDateFilterData.dateUntil,
-                                                 $scope.creationDateFilterData.minDate, $scope.creationDateFilterData.maxDate).then(function (data) {
-            $scope.mailAddressesList = data.data.MailAddressesList;
-            $scope.paginationData.currentPage = data.data.PageInfo.PageNumber;
-            $scope.paginationData.itemsPerPage = data.data.PageInfo.PageSize;
-            $scope.paginationData.totalItems = data.data.PageInfo.TotalItems;
-            $scope.sortData.sortField = data.data.PageInfo.OrderField;
-            $scope.sortData.reverse = data.data.PageInfo.SortReverse;
-            //console.log(data.data.PageInfo);
-        }, function (error) {
-            alert("Error! Can't get mail address list data! " + error.status);
-        });
-        //$scope.filteredData = $scope.mailAddressesList;
-        //$scope.filteredData = mailAddressListFilter($scope.filteredData, $scope.rangeData.valueFrom, $scope.rangeData.valueUntil,
-        //                                            $scope.creationDateFilterData.dateFrom, $scope.creationDateFilterData.dateUntil);
-        //$scope.filteredData = filter($scope.filteredData, { Country: $scope.countryFilter, City: $scope.cityFilter, Street: $scope.streetFilter, Index: $scope.indexFilter });
-        //$scope.filteredData = orderBy($scope.filteredData, $scope.sortField, $scope.reverse);
-        //$scope.paginationData.totalItems = $scope.filteredData.length;
-        //$scope.paginationData.onPageChange();
+        getMailAddressList(); // update page data with filtered info
     };
 
+    
     /* Reset all filters */
     $scope.resetFilter = function () {
         $scope.countryFilter = undefined;
@@ -108,11 +68,6 @@ function MailAdsListCtrl($scope, MailAdsListModel, orderBy, mailAddressListFilte
         $scope.rangeData.reset();
         $scope.rangeData.onRangeChange();
         $scope.creationDateFilterData.reset();
-        //$scope.filteredData = $scope.mailAddressesList;
-        //$scope.filteredData = orderBy($scope.filteredData, $scope.sortField, $scope.reverse);
-        //$scope.paginationData.totalItems = $scope.filteredData.length;
-        //$scope.paginationData.onPageChange();
-
     };
 
     /* Date Filter properties */
@@ -175,7 +130,6 @@ function MailAdsListCtrl($scope, MailAdsListModel, orderBy, mailAddressListFilte
         currentPage: 1,
         onPageChange: function () {
             getMailAddressList();
-            //$scope.pageData = $scope.filteredData.slice((this.currentPage - 1) * this.itemsPerPage, this.currentPage * this.itemsPerPage);
         }
     };
 
@@ -183,45 +137,17 @@ function MailAdsListCtrl($scope, MailAdsListModel, orderBy, mailAddressListFilte
     $scope.sortData = {
         sortField: 'CreationDate',
         reverse: true,
-        sort: function(fieldName) {
-            $scope.reverse = (fieldName !== null && this.sortField === fieldName) ? !this.reverse : false;
+        sort: function (fieldName) {
+            this.reverse = (fieldName !== null && this.sortField === fieldName) ? !this.reverse : false;
             this.sortField = fieldName;
-            //$scope.filteredData = orderBy($scope.filteredData, $scope.sortField, $scope.reverse);
-            //$scope.paginationData.onPageChange();
+            getMailAddressList();
         },
         isSortUp: function (fieldName) {
-            return this.sortField === fieldName && this.reverse;
+            return this.sortField === fieldName && !this.reverse;
         },
         isSortDown: function (fieldName) {
             return this.sortField === fieldName && this.reverse;
         }
-    };
-    /*$scope.sortField = 'CreationDate';
-    $scope.reverse = true;
-
-    $scope.sort = function (fieldName) {
-        $scope.reverse = (fieldName !== null && $scope.sortField === fieldName) ? !$scope.reverse : false;
-        $scope.sortField = fieldName;
-        $scope.filteredData = orderBy($scope.filteredData, $scope.sortField, $scope.reverse);
-        $scope.paginationData.onPageChange();
-    };
-    $scope.isSortUp = function (fieldName) {
-        return $scope.sortField === fieldName && !$scope.reverse;
-    };*/
-    $scope.isSortDown = function (fieldName) {
-        return $scope.sortField === fieldName && $scope.reverse;
-    };
-
-    //getMailAddressList();
-
-};
-
-/* Filter for date and numeric range */
-function mailAddressListFilter() {
-    return function (input, valueFrom, valueUntil, dateFrom, dateUntil) {
-        return input.filter(function (item) {
-            return (item.HouseNumber >= valueFrom) && (item.HouseNumber <= valueUntil) && (item.CreationDate.slice(6, -2) >= dateFrom) && (item.CreationDate.slice(6, -2) <= dateUntil);
-        });
     };
 };
 

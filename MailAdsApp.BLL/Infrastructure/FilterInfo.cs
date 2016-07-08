@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MailAdsApp.BLL.Infrastructure
 {
+    /// <summary>
+    /// Class for filter information, uses by MailAdsTableService
+    /// </summary>
     public class FilterInfo
     {
         public FilterInfo()

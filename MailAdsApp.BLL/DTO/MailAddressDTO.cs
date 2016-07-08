@@ -2,6 +2,9 @@
 
 namespace MailAdsApp.BLL.DTO
 {
+    /// <summary>
+    /// MailAddress Data Transfer Object Model 
+    /// </summary>
     public class MailAddressDTO
     {
         public int Id { get; set; }

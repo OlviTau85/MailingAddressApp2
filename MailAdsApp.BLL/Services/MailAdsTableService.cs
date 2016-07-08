@@ -14,17 +14,28 @@ using System.Reflection;
 
 namespace MailAdsApp.BLL.Services
 {
+    /// <summary>
+    /// Service for handle data in table and work with data base
+    /// </summary>
     public class MailAdsTableService: IMailAdsTableService
     {
         IUnitOfWork DataBase { get; set; }
 
+        /// <summary>
+        /// Filter settings
+        /// </summary>
         public FilterInfo Filter { get; set; }
 
+        /// <summary>
+        /// Constructor for service
+        /// </summary>
+        /// <param name="uow">Unit of work for use it</param>
         public MailAdsTableService(IUnitOfWork uow)
         {
             DataBase = uow;
             Filter = new FilterInfo();
             IEnumerable<MailAddress> result = DataBase.MailAddresses.GetAll();
+            //first filter initialization
             Filter.UntilHouseNumberFilter = Filter.MaxHouseNumberFilter = result.Max(key => key.HouseNumber);
             Filter.FromHouseNumberFilter = Filter.MinHouseNumberFilter = result.Min(key => key.HouseNumber);
             Filter.MaxCreationDate = result.Max(key => key.CreationDate);
@@ -33,6 +44,10 @@ namespace MailAdsApp.BLL.Services
             Filter.FromCreationDate = result.Min(key => key.CreationDate);
         }
 
+        /// <summary>
+        /// Method for geting prepared filtered data
+        /// </summary>
+        /// <returns>Filtered collection of mail address records</returns>
         public IEnumerable<MailAddressDTO> GetMailAddresses()
         {
             var config = new MapperConfiguration(cfg => {
@@ -41,15 +56,15 @@ namespace MailAdsApp.BLL.Services
             var result = DataBase.MailAddresses.GetAll();
             if (Filter.CountryFilter != null)
             {
-                result = result.Where(key => key.Country.Contains(Filter.CountryFilter));
+                result = result.Where(key => key.Country.ToLower().Contains(Filter.CountryFilter.ToLower()));
             }
             if (Filter.CityFilter != null)
             {
-                result = result.Where(key => key.City.Contains(Filter.CityFilter));
+                result = result.Where(key => key.City.ToLower().Contains(Filter.CityFilter.ToLower()));
             }
             if (Filter.StreetFilter != null)
             {
-                result = result.Where(key => key.Street.Contains(Filter.StreetFilter));
+                result = result.Where(key => key.Street.ToLower().Contains(Filter.StreetFilter.ToLower()));
             }
             if (Filter.IndexFilter != null)
             {
@@ -71,7 +86,6 @@ namespace MailAdsApp.BLL.Services
             {
                 result = result.Where(key => key.CreationDate <= Filter.UntilCreationDate);
             }
-            //result = result.ApplyOrder("Street", "OrderBy");
             return config.CreateMapper().Map<IEnumerable<MailAddress>, List<MailAddressDTO>>(result);
         }
 

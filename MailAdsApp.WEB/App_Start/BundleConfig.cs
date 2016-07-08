@@ -24,7 +24,7 @@ namespace MailAdsApp.WEB
                 "~/Scripts/Angular/angular-locale_ru-ru.js",
                 "~/Scripts/Angular/angular-ranger.js"
             ));
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/Bootstrap/bootstrap.js"));
+            //bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/Bootstrap/bootstrap.js"));
             bundles.Add(new ScriptBundle("~/bundles/angular-strap").Include(
                 "~/Scripts/Angular/angular-strap/angular-strap.js",
                 "~/Scripts/Angular/angular-strap/angular-strap.tpl.js",

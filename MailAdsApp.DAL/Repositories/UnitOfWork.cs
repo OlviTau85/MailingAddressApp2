@@ -10,15 +10,25 @@ using System.Threading.Tasks;
 
 namespace MailAdsApp.DAL.Repositories
 {
+    /// <summary>
+    /// Realization of Unit of work interface for project
+    /// </summary>
     public class UnitOfWork: IUnitOfWork
     {
         private MailAdsContext db;
         private MailAdsRepository mailAdsRepository;
 
+        /// <summary>
+        /// Constructor with connection string parametr
+        /// </summary>
+        /// <param name="connectionString">Conection string to data base</param>
         public UnitOfWork(string connectionString)
         {
             db = new MailAdsContext(connectionString);
         }
+        /// <summary>
+        /// Property for access to repository with mail address data
+        /// </summary>
         public IRepository<MailAddress> MailAddresses
         {
             get 
@@ -31,6 +41,9 @@ namespace MailAdsApp.DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Method for save info into database
+        /// </summary>
         public void Save()
         {
             try
