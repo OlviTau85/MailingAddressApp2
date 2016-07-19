@@ -6,6 +6,7 @@ using MailAdsApp.WEB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -47,26 +48,10 @@ namespace MailAdsApp.WEB.Controllers
             mailAdsTableService.Filter.UntilCreationDate = model.PageInfo.UntilCreationDate;
             model.MailAddressesList = Mapper.Map<IEnumerable<MailAddressDTO>, List<MailAddress>>(mailAdsTableService.GetMailAddresses());
             // and check up ordering
-            switch (model.PageInfo.OrderField)
+            model.MailAddressesList = model.MailAddressesList.OrderBy(model.PageInfo.OrderField);
+            if (model.PageInfo.SortReverse)
             {
-                case "Country":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Country) : model.MailAddressesList.OrderBy(key => key.Country);
-                    break;
-                case "City":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.City) : model.MailAddressesList.OrderBy(key => key.City);
-                    break;
-                case "Street":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Street) : model.MailAddressesList.OrderBy(key => key.Street);
-                    break;
-                case "Index":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.Index) : model.MailAddressesList.OrderBy(key => key.Index);
-                    break;
-                case "HouseNumber":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.HouseNumber) : model.MailAddressesList.OrderBy(key => key.HouseNumber);
-                    break;
-                case "CreationDate":
-                    model.MailAddressesList = model.PageInfo.SortReverse ? model.MailAddressesList.OrderByDescending(key => key.CreationDate) : model.MailAddressesList.OrderBy(key => key.CreationDate);
-                    break;
+                model.MailAddressesList = model.MailAddressesList.Reverse();
             }
             //update page info
             model.PageInfo.TotalItems = model.MailAddressesList.Count();
